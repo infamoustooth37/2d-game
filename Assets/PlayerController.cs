@@ -14,12 +14,16 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(-5, rb.velocity.y);
             transform.localScale = new Vector2 (-1, 1);
             Run.SetBool("running", true);
-        } else if(Input.GetKey(KeyCode.D))
+        }
+        
+        if(Input.GetKey(KeyCode.D))
         {
             rb.velocity = new Vector2(5, rb.velocity.y);
             transform.localScale = new Vector2 (1, 1);
             Run.SetBool("running", true); 
-        } else if(Input.GetKeyDown(KeyCode.Space))
+        }
+        
+        if(Input.GetKeyDown(KeyCode.Space))
         {
             rb.velocity = new Vector2(rb.velocity.x, 10f);
             
