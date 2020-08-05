@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement; //So you can use SceneManager
 public class PlayerController : MonoBehaviour
 {
     //Staart Variables
@@ -12,12 +12,46 @@ public class PlayerController : MonoBehaviour
    [SerializeField] private int cherries = 0;
    [SerializeField] private Text cherryText;
     //States
-    private enum State {idle, running, jumping, falling}
+    private enum State {idle, running, jumping, falling, hurt}
     private State state = State.idle;
     //Inspector Variables
     [SerializeField]private LayerMask ground;
     [SerializeField]private float speed = 5f;
     [SerializeField]private float JumpForce = 12f;
+     [SerializeField]private float hurtForce = 10f;
+
+
+    
+    private void OnCollisionEnter2D(Collision2D other)//destroying enemy
+    {
+        if(other.gameObject.tag == "Enemy")
+        {
+            if(state == State.falling)
+            {
+                Destroy(other.gameObject);
+                Jump();
+            }
+            else
+            {
+                state =State.hurt;
+                print("This is happenning");
+                if(other.gameObject.transform.position.x > transform.position.x)
+                {
+                    //enemy is on the right therfore damadge and move left
+                    rb.velocity = new Vector2(-hurtForce, rb.velocity.y);
+                    print("To my right");
+                }
+                else
+                {
+                    //enemny is on the left therefore damadge and move rigth
+                     rb.velocity = new Vector2(hurtForce, rb.velocity.y);
+                     print("to my left");
+                }
+            }
+            
+        }
+        
+    }
 
     private void OnTriggerEnter2D(Collider2D collision) 
     {
@@ -35,6 +69,10 @@ public class PlayerController : MonoBehaviour
     }
     private void Update() 
     {
+        if(state != State.hurt)
+        {
+            InputManager();
+        }
         InputManager();
         VelocityState();
         anim.SetInteger("state", (int)state);//game choosing state of player and sets animation based on velocity and direction
@@ -57,14 +95,19 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector2 (1, 1);//flip sprite
             
         }
-
+    //jumping
         if(Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground)) //jump + saying which layer player can jump on
         {
-            rb.velocity = new Vector2(rb.velocity.x, JumpForce);
-            state = State.jumping;
+            Jump();
         }  
+    
         
        
+    }
+    private void Jump()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, JumpForce);
+        state = State.jumping;
     }
     private void VelocityState()
     {
@@ -82,6 +125,13 @@ public class PlayerController : MonoBehaviour
                 state = State.idle;
             }
         }
+        else if (state ==State.hurt)
+        {
+            if(Mathf.Abs(rb.velocity.x) < .1f)
+            {
+                state=State.idle;
+            }
+        }
         else if(Mathf.Abs(rb.velocity.x) > 2f)
         {
             //Moving
@@ -93,5 +143,16 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+     
+ public void RestartGame() 
+ {
+
+    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+ }
+
+ 
+
 }
+
+
 
