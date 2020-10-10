@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement; //So you can use SceneManager
+using UnityEngine.SceneManagement; //So you can use SceneManager 
 public class PlayerController : MonoBehaviour
 {
     //Staart Variables
@@ -18,8 +18,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]private LayerMask ground;
     [SerializeField]private float speed = 5f;
     [SerializeField]private float JumpForce = 12f;
-     [SerializeField]private float hurtForce = 10f;
+    [SerializeField]private float hurtForce = 10f;
 
+ 
 
     
     private void OnCollisionEnter2D(Collision2D other)//destroying enemy
