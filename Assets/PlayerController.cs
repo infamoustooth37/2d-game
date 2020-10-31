@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement; //So you can use SceneManager 
-
-
-
 public class PlayerController : MonoBehaviour
 {
-    //Start Variables
+    //Staart Variables
     private Animator anim;
     private Rigidbody2D rb; 
     private Collider2D coll;
    [SerializeField] private int cherries = 0;
    [SerializeField] private Text cherryText;
     //States
-    private enum State { idle, running, jumping, falling, hurt }
+    private enum State {idle, running, jumping, falling, hurt}
     private State state = State.idle;
     //Inspector Variables
     [SerializeField]private LayerMask ground;
@@ -28,12 +25,11 @@ public class PlayerController : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D other)//destroying enemy
     {
-        Enemy enemy = other.gameObject.GetComponent<Enemy>();
         if(other.gameObject.tag == "Enemy")
         {
             if(state == State.falling)
             {
-                enemy.JumpedOn();
+                Destroy(other.gameObject);
                 Jump();
             }
             else
@@ -148,10 +144,14 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+     
+ public void RestartGame() 
+ {
 
-    
+    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+ }
 
-
+ 
 
 }
 
